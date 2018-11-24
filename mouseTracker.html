@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<body onbeforeunload="lol()"  onclick="clicker(event)" onmousemove="clicks(event)">
+<div id="lol">
+    <script>
+    function lol(){
+    arrayfilter()
+    }
+        var X=document.getElementById('lol')
+      X.style.position="absolute";
+      X.style.top="0px"
+        X.style.left="0px"
+        X.style.minHeight=screen.height+"px";
+        X.style.minWidth=screen.width+"px";
+        var x;
+        var y;
+        var clickerposix;
+        var clickerposiy;
+        var points = [];
+        var counter = 0;
+        function clicker(e) {
+          //console.log("inner clciker")
+            function counterplus() {
+                counter++
+            }
+            var counterx = counter;
+            function reset() {
+                counter = 0;
+                counterx = counter;
+            }
+
+          //  var xo = ["green", "blue", "yellow", "golden", "purple", "orange", "silver", "pink", "olive", "cream", "beige", "red"]
+            if (clickerposix && clickerposiy) {
+                if (clickerposix - e.clientX > 20 || clickerposix - e.clientX < -20) {
+                    reset()
+                }
+              //  ctx.beginPath();
+                //ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
+                //ctx.fillStyle = xo[counterx]
+
+            }
+            else {
+                clickerposix = e.clientX;
+                clickerposiy = e.clientY;
+              //  ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
+                //ctx.fillStyle = xo[counterx]
+
+            }
+            var date = new Date;
+            points.push([e.clientX, e.clientY, "click", date.getHours(), date.getMinutes(), date.getSeconds()])
+          //  console.log("last click")
+            //console.log(points[points.length - 1])
+            //ctx.fill();
+            //ctx.stroke();
+            clickerposix = e.clientX
+            clickerposiy = e.clientY;
+
+            counterplus()
+            //arrayfilter()
+        }
+        function clicks(e) {
+
+
+
+            try {
+                var date = new Date;
+                if (x && y) {
+
+                    points.push([e.clientX, e.clientY, "mouseover", date.getHours(), date.getMinutes(), date.getSeconds()])
+                    //ctx.moveTo(x, y);
+                    //ctx.lineTo(e.clientX, e.clientY);
+
+                    x = e.clientX;
+                    y = e.clientY;
+                  //  ctx.stroke();
+
+
+                }
+                else {
+                    x = e.clientX
+                    y = e.clientY
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+
+        }
+      async function arrayfilter() {
+        var filterx;
+        var filtery;
+            var arr={};
+
+            for (var counter = 0; counter < points.length; counter++) {
+
+              var filterarray = {};
+                if (!filterx && !filtery) {
+                    filterx = points[counter][0]
+                    filtery = points[counter][1]
+                    filterarray["x"]=points[counter][0]
+                    filterarray["y"]=points[counter][1]
+                    filterarray["event"]=points[counter][2]
+                    filterarray["time"]=points[counter][3]+"/"+points[counter][4]+"/"+points[counter][5]
+                    arr["points "+counter]=filterarray;
+                }
+                else {
+
+                    if ((filterx - points[counter][0] > 1 || filterx - points[counter][0] < -1) && (filtery - points[counter][1] > 1 || filtery - points[counter][1] < -1) || (points[counter][2] == "click")) {
+                            filterx = points[counter][0]
+                            filtery = points[counter][1]
+
+                        filterarray["x"]=points[counter][0]
+                        filterarray["y"]=points[counter][1]
+                        filterarray["event"]=points[counter][2]
+                        filterarray["time"]=points[counter][3]+"/"+points[counter][4]+"/"+points[counter][5]
+                        arr["points "+counter]=filterarray;
+                    }
+                }
+            }
+
+          sendarr()
+            function sendarr(){
+              var xhr=new XMLHttpRequest()
+              xhr.onreadystatechange=function(){
+                if(this.readyState==4){
+                  console.log(this.responseText)
+                }
+              }
+              xhr.open("POST","http://localhost:3000/render")
+              xhr.setRequestHeader("Content-type","application/json")
+              var data=JSON.stringify(arr)
+              xhr.send(data)
+            }
+            console.log(arr)
+            console.log(points)
+        }
+
+    </script>
+</div>
+</body>
+
+</html>

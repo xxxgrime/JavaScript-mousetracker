@@ -1,0 +1,135 @@
+<html>
+<link rel="stylesheet" href="../styles.css">
+
+<body>
+    <button id="button1" class="control" onclick="increaseSpeed()" style="
+     width:40px;height:40px;
+    border:solid red 1px;
+    background-color:white;
+    position:absolute;
+    top:90%;
+    left:95%;
+    z-index:4;
+    box-shadow:2px 2px 10px black;
+    color:red;
+    text-align:center;
+    font-weight:400;
+    ">
+    1000
+        </button>
+    <button id="button2" class="control" onclick="decreaseSpeed()" style="
+     width:40px;height:40px;
+    border:solid red 1px;
+    background-color:white;
+    position:absolute;
+    top:90%;
+    left:90%;
+    z-index:4;
+    box-shadow:2px 2px 10px black;
+    color:red;
+    text-align:center;
+    font-weight:400;
+    ">
+    1000
+        </button>
+
+    <canvas id="Mycanvas"></canvas>
+    <script>
+        var canvasref = document.getElementById("Mycanvas");
+        canvasref.width = screen.width;
+        canvasref.height = screen.height;
+        var ctx = canvasref.getContext("2d");
+        var result;
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            console.log(this.readyState)
+            if (this.readyState == 4) {
+
+                try {
+                    result = JSON.parse(this.responseText)
+
+                    rendertoscreen(result)
+                    console.log(result)
+                }
+                catch (err) {
+                    console.log(err)
+                }
+
+            }
+        }
+        xhr.open("GET", "http://localhost:3000/getdata")
+        xhr.send();
+    </script>
+    <script>
+        var time = 1000;
+        var lasttime;
+        function increaseSpeed() {
+            if (time == 500000) { time = lasttime }
+            time == 100 ? time = time : time -= 100
+            document.getElementById("button1").innerHTML = time
+            document.getElementById("button2").innerHTML = time
+        }
+        function decreaseSpeed() {
+            if (time == 500000) { time = lasttime }
+            time == 2000 ? time = time : time += 100
+            document.getElementById("button1").innerHTML = time
+            document.getElementById("button2").innerHTML = time
+        }
+
+        function timer() {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    console.log("done")
+                    resolve("ok resolved")
+                }, time)
+            })
+        }
+    </script>
+    <script>
+        var x;
+        var y;
+        async function rendertoscreen(arr) {
+
+            var keys = Object.keys(arr)
+            if (keys != 0 && typeof arr !== "string") {
+                try {
+                    for (var i = 0; i < keys.length; i++) {
+                        if (arr[keys[i]].event == "click") {
+
+                            ctx.arc(arr[keys[i]].x, arr[keys[i]].y, 10, 0, 2 * Math.PI);
+                            ctx.fillStyle = "red"
+                            ctx.fill();
+                        }
+                        else {
+
+                            ctx.moveTo(arr[keys[i]].x, arr[keys[i]].y)
+
+                            if (arr[keys[i + 1]].event && arr[keys[i + 1]].event == "mouseover") {
+                                ctx.lineTo(arr[keys[i + 1]].x, arr[keys[i + 1]].y)
+                                ctx.stroke()
+                            }
+                            else {
+                                ctx.lineTo(arr[keys[i]].x, arr[keys[i]].y)
+                                ctx.stroke()
+                            }
+
+                        }
+
+
+                        await timer()
+                    }
+
+                }
+                catch (err) {
+                    ctx.moveTo(arr[keys[i-2]].x, arr[keys[i-2]].y)
+                    ctx.lineTo(arr[keys[i - 1]].x, arr[keys[i - 1]].y)
+                    ctx.stroke()
+                }
+
+
+            }
+        }
+    </script>
+</body>
+
+</html>
