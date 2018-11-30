@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <script src="./test.js"></script>
-<body onbeforeunload="process()"  >
+<body>
 <div id="lol">
     <script>
     function process(){
@@ -15,15 +15,15 @@
         X.style.minWidth=screen.width+"px";
         var points = [];
         function _init_(){
-         window.addEventListener("click",clicker.bind(event,"click"))
-        window.addEventListener("mousemove",clicker.bind(event,"mouseover"))
+        window.addEventListener("click",clicker)
+        window.addEventListener("mousemove",clicker)
         window.addEventListener("beforeunload",process)
     }
        _init_();
-        function clicker(e,a) {
+        function clicker(e) {
    
             var date = new Date;
-            points.push([a.clientX, a.clientY, a.type, date.getHours(), date.getMinutes(), date.getSeconds()])
+            points.push([e.clientX, e.clientY, e.type, date.getHours(), date.getMinutes(), date.getSeconds()])
         }
       async function filterArray() {
         var filterx;
