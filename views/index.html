@@ -1,5 +1,4 @@
 <html>
-<link rel="stylesheet" href="../styles.css">
 
 <body>
     <button id="button1" class="control" onclick="increaseSpeed()" style="
@@ -91,20 +90,20 @@
         async function rendertoscreen(arr) {
 
             var keys = Object.keys(arr)
+            console.log(keys)
             if (keys != 0 && typeof arr !== "string") {
                 try {
                     for (var i = 0; i < keys.length; i++) {
+                        console.log(arr[keys[i]].event)
                         if (arr[keys[i]].event == "click") {
-
                             ctx.arc(arr[keys[i]].x, arr[keys[i]].y, 10, 0, 2 * Math.PI);
                             ctx.fillStyle = "red"
                             ctx.fill();
                         }
                         else {
-
+                            try{
                             ctx.moveTo(arr[keys[i]].x, arr[keys[i]].y)
-
-                            if (arr[keys[i + 1]].event && arr[keys[i + 1]].event == "mouseover") {
+                            if (arr[keys[i + 1]].event && arr[keys[i + 1]].event == "mousemove") {
                                 ctx.lineTo(arr[keys[i + 1]].x, arr[keys[i + 1]].y)
                                 ctx.stroke()
                             }
@@ -112,6 +111,10 @@
                                 ctx.lineTo(arr[keys[i]].x, arr[keys[i]].y)
                                 ctx.stroke()
                             }
+                        }
+                        catch(err){
+                            console.log(err)
+                        }
 
                         }
 

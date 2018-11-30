@@ -29,6 +29,7 @@ app.get('/render',function(req,res,next){
 var render;
 app.post('/render',(req,res,next)=>{
     render=req.body;
+    console.log(req.body)
     res.send("received")
 })
 
